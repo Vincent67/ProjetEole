@@ -1,0 +1,149 @@
+package ProjetRegate;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTabbedPane;
+import javax.swing.JLayeredPane;
+import javax.swing.JLabel;
+import java.awt.List;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
+
+public class FenetreEole extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField tfNomRegate;
+	private JTextField tfDistRegate;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FenetreEole frame = new FenetreEole();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FenetreEole() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1066, 613);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 11, 1030, 553);
+		contentPane.add(tabbedPane);
+		
+		JLayeredPane layeredPane = new JLayeredPane();
+		tabbedPane.addTab("Enregistrement Régates", null, layeredPane, null);
+		layeredPane.setLayout(null);
+		
+		JLabel lblRegate = new JLabel("R\u00E9gates");
+		lblRegate.setFont(new Font("Tahoma", Font.BOLD, 22));
+		lblRegate.setBounds(392, 0, 126, 56);
+		layeredPane.add(lblRegate);
+		
+		List listVoiliers = new List();
+		listVoiliers.setBounds(10, 144, 449, 246);
+		layeredPane.add(listVoiliers);
+		
+		List listParticipants = new List();
+		listParticipants.setBounds(523, 144, 449, 246);
+		layeredPane.add(listParticipants);
+		
+		JComboBox cmbJour = new JComboBox();
+		cmbJour.setModel(new DefaultComboBoxModel(new String[] {"Jour"}));
+		cmbJour.setToolTipText("");
+		cmbJour.setBounds(235, 56, 135, 20);
+		layeredPane.add(cmbJour);
+		
+		JComboBox cmbMois = new JComboBox();
+		cmbMois.setModel(new DefaultComboBoxModel(new String[] {"Mois"}));
+		cmbMois.setBounds(370, 56, 175, 20);
+		layeredPane.add(cmbMois);
+		
+		JComboBox cmbAnnee = new JComboBox();
+		cmbAnnee.setModel(new DefaultComboBoxModel(new String[] {"Ann\u00E9e"}));
+		cmbAnnee.setBounds(543, 56, 135, 20);
+		layeredPane.add(cmbAnnee);
+		
+		JLabel lblNomRegate = new JLabel("Nom de la r\u00E9gate");
+		lblNomRegate.setBounds(619, 95, 105, 14);
+		layeredPane.add(lblNomRegate);
+		
+		tfNomRegate = new JTextField();
+		tfNomRegate.setBounds(762, 92, 86, 20);
+		layeredPane.add(tfNomRegate);
+		tfNomRegate.setColumns(10);
+		
+		JLabel lblDistanceRegate = new JLabel("Distance r\u00E9gate");
+		lblDistanceRegate.setBounds(23, 95, 86, 14);
+		layeredPane.add(lblDistanceRegate);
+		
+		tfDistRegate = new JTextField();
+		tfDistRegate.setBounds(136, 92, 86, 20);
+		layeredPane.add(tfDistRegate);
+		tfDistRegate.setColumns(10);
+		
+		JLabel lblVoiliers = new JLabel("Voiliers");
+		lblVoiliers.setBounds(211, 123, 46, 14);
+		layeredPane.add(lblVoiliers);
+		
+		JLabel lblParticipants = new JLabel("Participants");
+		lblParticipants.setBounds(635, 124, 76, 14);
+		layeredPane.add(lblParticipants);
+		
+		JButton btnFlecheVersLaDroite = new JButton("\u2192");
+		btnFlecheVersLaDroite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnFlecheVersLaDroite.setBounds(465, 159, 53, 20);
+		layeredPane.add(btnFlecheVersLaDroite);
+		
+		JButton btnFlecheVersLaGauche = new JButton("\u2190");
+		btnFlecheVersLaGauche.setBounds(465, 350, 53, 23);
+		layeredPane.add(btnFlecheVersLaGauche);
+		
+		JButton btnEnregisterRegate = new JButton("Enregistrer ");
+		btnEnregisterRegate.setBounds(211, 436, 117, 23);
+		layeredPane.add(btnEnregisterRegate);
+		
+		JButton btnImprimer = new JButton("Imprimer");
+		btnImprimer.setBounds(418, 436, 116, 23);
+		layeredPane.add(btnImprimer);
+		
+		JButton btnAnnuler = new JButton("Annuler ");
+		btnAnnuler.setBounds(635, 436, 117, 23);
+		layeredPane.add(btnAnnuler);
+		
+		JLabel lblDate = new JLabel("Date");
+		lblDate.setBounds(161, 59, 46, 14);
+		layeredPane.add(lblDate);
+		
+		JTabbedPane layeredPaneCl = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Classement", null, layeredPaneCl, null);
+		layeredPaneCl.setLayout(null);
+	}
+}
