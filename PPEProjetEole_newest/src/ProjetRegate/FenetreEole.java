@@ -15,6 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
@@ -84,20 +87,39 @@ public class FenetreEole extends JFrame {
 		listParticipants.setBounds(523, 144, 449, 246);
 		layeredPane.add(listParticipants);
 		
-		JComboBox cmbJour = new JComboBox();
-		cmbJour.setModel(new DefaultComboBoxModel(new String[] {"Jour"}));
+		LocalDateTime jourActu = LocalDateTime.now();
+		String[] tabJour = new String[31];
+		for (int i = 0; i <= 30; i++ ) {
+			tabJour[i] = "" + (i+1);
+		}
+		JComboBox cmbJour = new JComboBox(tabJour);
 		cmbJour.setToolTipText("");
 		cmbJour.setBounds(235, 56, 135, 20);
+		cmbJour.setSelectedItem(tabJour[jourActu.getDayOfMonth()-1]);
 		layeredPane.add(cmbJour);
 		
-		JComboBox cmbMois = new JComboBox();
-		cmbMois.setModel(new DefaultComboBoxModel(new String[] {"Mois"}));
+		
+		
+		String[] tabMois = new String[12];
+		LocalDate mois; 
+		String Smois = "";
+		for (int i = 0; i <= 11; i++ ) {
+			mois = LocalDate.of(1 , i + 1 , 1);
+			Smois = mois.format(DateTimeFormatter.ofPattern("MMMM"));
+			tabMois[i] = "" + Smois;
+		}
+		JComboBox cmbMois = new JComboBox(tabMois);
 		cmbMois.setBounds(370, 56, 175, 20);
+		cmbMois.setSelectedItem(tabMois[jourActu.getMonthValue()-1]);
 		layeredPane.add(cmbMois);
 		
-		JComboBox cmbAnnee = new JComboBox();
-		cmbAnnee.setModel(new DefaultComboBoxModel(new String[] {"Ann\u00E9e"}));
+		String[] tabAnnee = new String[1000];
+		for (int i = 0; i <=999; i++ ) {
+			tabAnnee[i] = "" + (i+1970);
+		}
+		JComboBox cmbAnnee = new JComboBox(tabAnnee);
 		cmbAnnee.setBounds(543, 56, 135, 20);
+		cmbAnnee.setSelectedItem(tabAnnee[Integer.parseInt((String)(jourActu).toString().substring(0, 4))-1970]);
 		layeredPane.add(cmbAnnee);
 		
 		JLabel lblNomRegate = new JLabel("Nom de la r\u00E9gate");
@@ -110,7 +132,7 @@ public class FenetreEole extends JFrame {
 		tfNomRegate.setColumns(10);
 		
 		JLabel lblDistanceRegate = new JLabel("Distance r\u00E9gate");
-		lblDistanceRegate.setBounds(23, 95, 86, 14);
+		lblDistanceRegate.setBounds(23, 95, 103, 14);
 		layeredPane.add(lblDistanceRegate);
 		
 		tfDistRegate = new JTextField();
