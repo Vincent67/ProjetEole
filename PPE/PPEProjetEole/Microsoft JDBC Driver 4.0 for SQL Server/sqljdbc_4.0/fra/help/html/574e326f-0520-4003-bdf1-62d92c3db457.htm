@@ -1,0 +1,173 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><META NAME="save" CONTENT="history" /><title>Transactions XA</title><meta name="Language" content="fr-fr" /><meta name="System.Keywords" content="transactions distribuées" /><meta name="System.Keywords" content="transactions XA" /><meta name="Microsoft.Help.Id" content="574e326f-0520-4003-bdf1-62d92c3db457" /><meta name="Description" content="Le Pilote JDBC Microsoft pour SQL Server prend en charge les transactions distribuées facultatives Java Platform, Enterprise Edition/JDBC 2.0." /><meta name="Microsoft.Help.ContentType" content="Concepts" /><link rel="stylesheet" type="text/css" href="../local/Classic.css" /><script type="text/javascript" src="../scripts/EventUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/SplitScreen.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/Dropdown.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_manifold.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_feedBack.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CheckboxMenu.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CommonUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../local/script_main.js">&amp;nbsp;</script></head><body><div id="header"><table id="bottomTable" cellpadding="0" cellspacing="0"><tr><td align="left"><span id="headerBold">Transactions XA</span></td></tr></table><table id="gradientTable"><tr><td class="nsrBottom" background="../icons/gradient.gif" /></tr></table></div><div id="mainSection"><div id="mainBody"><div class="introduction"><p>Le Pilote JDBC Microsoft pour SQL Server prend en charge les transactions distribuées facultatives Java Platform, Enterprise Edition/JDBC 2.0. Les connexions JDBC obtenues à partir de la classe <a href="95fc7b07-2498-4a7e-8f7f-ee0d86b598b4.htm">SQLServerXADataSource</a> peuvent participer aux environnements de traitement des transactions distribuées standard, tels que les serveurs d'applications Java Platform, Enterprise Edition (Java EE).</p></div><h1 class="heading">Notes</h1><div id="sectionSection0" class="section" name="collapseableSection" style=""><p>Les classes pour l'implémentation des transactions distribuées sont les suivantes :</p><div class="tableSection"><table width="50%" cellspacing="2" cellpadding="5" frame="lhs"><tr><th><p>Classe</p></th><th><p>Implémentation</p></th><th><p>Description</p></th></tr><tr><td><p>com.microsoft.sqlserver.jdbc.SQLServerXADataSource</p></td><td><p>javax.sql.XADataSource</p></td><td><p>Fabrique de classe pour les connexions distribuées.</p></td></tr><tr><td><p>com.microsoft.sqlserver.jdbc.SQLServerXAResource</p></td><td><p>javax.transaction.xa.XAResource</p></td><td><p>Adaptateur de ressources pour le gestionnaire de transactions.</p></td></tr></table></div><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>Les connexions de transactions distribuées XA sont définies par défaut au niveau d'isolation Read Committed.</p></div></div><h1 class="heading">Recommandations et limitations relatives à l'utilisation de transactions XA</h1><div id="sectionSection1" class="section" name="collapseableSection" style=""><p>Les recommandations supplémentaires suivantes s'appliquent aux transactions fortement couplées :</p><ul><li><p>Lorsque vous utilisez des transactions XA avec MS DTC (Microsoft Distributed Transaction Coordinator), vous pouvez remarquer que la version actuelle de MS DTC ne prend pas en charge le comportement de branche XA fortement couplée. Par exemple, MS DTC a un mappage un-à-un entre un ID de transaction de branche XA (XID) et un ID de transaction MS DTC et le travail effectué par les branches XA couplées de manière lâche est isolé.</p><p>Le correctif logiciel disponible sur la page Web <a href="http://support.microsoft.com/kb/938653">MSDTC and Tightly Coupled Transactions</a> (en anglais) autorise la prise en charge des branches XA étroitement couplées lorsque plusieurs branches XA avec le même ID de transaction globale (GTRID) sont mappées à un ID de transaction MS DTC unique. Cette prise en charge permet à plusieurs branches XA fortement couplées de voir les modifications apportées à chacune d'elles dans le gestionnaire de ressources, par exemple SQL Server.</p></li><li><p>Un indicateur <a href="379857c3-9de1-4964-8782-32df317cbfbb.htm">SSTRANSTIGHTLYCPLD</a> permet aux applications d'utiliser les transactions XA étroitement couplées, qui ont des ID de transaction de branche XA (BQUAL) différents mais le même ID de transaction global (GTRID) et ID de format (FormatID). Pour pouvoir utiliser cette fonctionnalité, vous devez définir le <a href="379857c3-9de1-4964-8782-32df317cbfbb.htm">SSTRANSTIGHTLYCPLD</a> sur le paramètre <b>flags</b> de la méthode <b>XAResource.start</b> :</p><div class="sampleCode"><span codeLanguage="other"><pre>xaRes.start(xid, SQLServerXAResource.SSTRANSTIGHTLYCPLD);</pre></span></div></li></ul></div><h1 class="heading">Instructions relatives à la configuration</h1><div id="sectionSection2" class="section" name="collapseableSection" style=""><p>Les étapes suivantes sont requises si vous souhaitez utiliser des sources de données XA avec Microsoft Distributed Transaction Coordinator (MS DTC) pour manipuler des transactions distribuées.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>Les composants de transaction distribuée JDBC sont inclus dans le répertoire xa de l'installation du pilote JDBC. Ces composants incluent les fichiers xa_install.sql et sqljdbc_xa.dll.</p></div><h1 class="heading">Exécution du service MS DTC</h1><div class="subsection"><p>Le service MS DTC doit être marqué comme <span class="ui">Automatique</span> dans le gestionnaire de services afin de garantir son exécution si le service SQL Server démarre. Pour activer MS DTC pour les transactions XA, vous devez procéder comme suit :</p><p>Sur Windows Vista et versions ultérieures :</p><ol><li><p>Cliquez sur le bouton <span class="ui">Démarrer</span>, tapez <span class="input">dcomcnfg</span> dans la zone <span class="ui">Rechercher</span>, puis appuyez sur ENTRÉE pour ouvrir <span class="ui">Services de composants</span>. Vous pouvez également taper %windir%\system32\comexp.msc dans la zone <span class="ui">Rechercher</span> du menu <span class="ui">Démarrer</span> pour ouvrir <span class="ui">Services de composants</span>.</p></li><li><p>Développez Services de composants, Ordinateurs, Poste de travail, puis Distributed Transaction Coordinator.</p></li><li><p>Cliquez avec le bouton droit sur <span class="ui">DTC local</span>, puis sélectionnez <span class="ui">Propriétés</span>.</p></li><li><p>Dans la boîte de dialogue <span class="ui">Propriétés du DTC local</span>, cliquez sur l'onglet <span class="ui">Sécurité</span>.</p></li><li><p>Activez la case à cocher <span class="ui">Activer les transactions XA</span>, puis cliquez sur <span class="ui">OK</span>. Ceci entraînera le redémarrage du service MS DTC.</p></li><li><p>Cliquez à nouveau sur <span class="ui">OK</span> pour fermer la boîte de dialogue <span class="ui">Propriétés</span>, puis fermez <span class="ui">Services de composants</span>.</p></li><li><p>Arrêtez, puis redémarrez SQL Server afin de garantir sa synchronisation avec les modifications de MS DTC.</p></li></ol></div><h1 class="heading">Configuration des composants de transaction distribuée JDBC</h1><div class="subsection"><p>Vous pouvez configurer les composants de transaction distribuée du pilote JDBC en suivant les étapes suivantes :</p><ol><li><p>Copiez le nouveau fichier sqljdbc_xa.dll depuis le répertoire d'installation du pilote JDBC vers le répertoire Binn de chaque ordinateur SQL Server susceptible de participer à des transactions distribuées.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p> Si vous utilisez des transactions XA avec un SQL Server 32 bits, utilisez le fichier sqljdbc_xa.dll dans le dossier x86, même si le SQL Server est installé sur un processeur x64. Si vous utilisez des transactions XA avec une version 64 bits de SQL Server sur un processeur x64, utilisez le fichier sqljdbc_xa.dll dans le dossier x64.</p></div></li><li><p>Exécutez le script de base de données xa_install.sql sur chaque instance de SQL Server susceptible de participer à des transactions distribuées. Ce script installe les procédures stockées étendues qui sont appelées par sqljdbc_xa.dll. Ces procédures stockées étendues implémentent la prise en charge des transactions distribuées et de XA pour le Pilote JDBC Microsoft pour SQL Server. Vous devez exécuter ce script en tant qu'administrateur de l'instance de SQL Server.</p></li><li><p>Pour autoriser un utilisateur spécifique à participer à des transactions distribuées avec le pilote JDBC, ajoutez-le au rôle SqlJDBCXAUser.</p></li></ol><p>Vous ne pouvez configurer qu'une seule version à la fois de l'assembly sqljdbc_xa.dll sur chaque instance de SQL Server. Les applications devront peut-être utiliser des versions différentes du pilote JDBC pour se connecter à la même instance de SQL Server via la connexion XA. Dans ce cas, sqljdbc_xa.dll, qui est livré avec le pilote JDBC le plus récent, doit être installé sur l'instance de SQL Server.</p><p>Il existe trois façons de vérifier la version actuellement installée de sqljdbc_xa.dll sur l'instance de SQL Server :</p><ol><li><p>Ouvrez le répertoire LOG de l'ordinateur SQL Server qui doit participer aux transactions distribuées. Sélectionnez et ouvrez le fichier ERRORLOG SQL Server. Recherchez l'expression « Using 'SQLJDBC_XA.dll' version ... » dans le fichier ERRORLOG.</p></li><li><p>Ouvrez le répertoire Binn de l'ordinateur SQL Server qui doit participer aux transactions distribuées. Sélectionnez l'assembly sqljdbc_xa.dll. </p><ul><li><p>Sur Windows Vista et versions ultérieures : cliquez avec le bouton droit sur sqljdbc_xa.dll, puis sélectionnez Propriétés. Cliquez ensuite sur l'onglet <span class="ui">Détails</span>. Le champ <span class="ui">Version du fichier</span> indique la version de sqljdbc_xa.dll actuellement installée sur l'instance de SQL Server. </p></li></ul></li><li><p>Définissez la fonctionnalité de journalisation comme indiqué dans l'exemple de code de la prochaine section. Recherchez l'expression « Server XA DLL version:... » dans le fichier journal de sortie.</p></li></ol></div><h1 class="heading">Mise à niveau du fichier sqljdbc_xa.dll</h1><div class="subsection"><p>Lorsque vous installez une nouvelle version du pilote JDBC, vous devez utiliser le fichier sqljdbc_xa.dll de la nouvelle version pour mettre à niveau le fichier sqljdbc_xa.dll sur le serveur.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>Vous devez mettre à niveau le fichier sqljdbc_xa.dll dans une fenêtre de maintenance ou lorsqu'aucune transaction MS DTC n'est en cours.</p></div><ol><li><p>Téléchargez le fichier sqljdbc_xa.dll à l'aide de la commande Transact-SQL <b>DBCC sqljdbc_xa (FREE)</b>.</p></li><li><p>Copiez le nouveau fichier sqljdbc_xa.dll depuis le répertoire d'installation du pilote JDBC vers le répertoire Binn de chaque ordinateur SQL Server susceptible de participer à des transactions distribuées.</p><p>La nouvelle DLL sera chargée à l'appel d'une procédure étendue dans sqljdbc_xa.dll. Il n'est pas nécessaire de redémarrer SQL Server pour charger les nouvelles définitions.</p></li></ol></div><h1 class="heading">Configuration des rôles définis par l'utilisateur</h1><div class="subsection"><p>Pour autoriser un utilisateur spécifique à participer à des transactions distribuées avec le pilote JDBC, ajoutez-le au rôle SqlJDBCXAUser. Par exemple, utilisez le code Transact-SQL suivant pour ajouter un utilisateur appelé « shelby » (« shelby » est un nom d'utilisateur standard d'ouverture de session SQL) au rôle SqlJDBCXAUser :</p><div class="sampleCode"><span codeLanguage="other"><pre>USE master
+GO
+EXEC sp_grantdbaccess 'shelby', 'shelby'
+GO
+EXEC sp_addrolemember [SqlJDBCXAUser], 'shelby'</pre></span></div><p>Les rôles définis par l'utilisateur SQL sont définis par base de données. Pour des raisons de sécurité, si vous souhaitez créer votre propre rôle, vous devez définir le rôle dans chaque base de données et ajouter les utilisateurs par base de données. Le rôle SqlJDBCXAUser est strictement défini dans la base de données master, car il est utilisé pour accorder l'accès aux procédures stockées étendues SQL JDBC se trouvant dans la base de données master. Vous devrez d'abord accorder un accès à la base de données master à l'utilisateur individuel, puis lui accorder un accès au rôle SqlJDBCXAUser en étant connecté à la base de données master.</p></div></div><h1 class="heading">Exemple</h1><div id="sectionSection3" class="section" name="collapseableSection" style=""><div class="sampleCode"><span codeLanguage="other"><pre>import java.net.Inet4Address;
+import java.sql.*;
+import java.util.Random;
+import javax.transaction.xa.*;
+import javax.sql.*;
+import com.microsoft.sqlserver.jdbc.*;
+
+public class testXA {
+
+   public static void main(String[] args) throws Exception {
+
+      // Create variables for the connection string.
+      String prefix = "jdbc:sqlserver://";
+      String serverName = "localhost";
+      int portNumber = 1433;
+      String databaseName = "AdventureWorks"; 
+      String user = "UserName"; 
+      String password = "*****";
+      String connectionUrl = prefix + serverName + ":" + portNumber
+         + ";databaseName=" + databaseName + ";user=" + user + ";password=" + password;
+
+      try {
+         // Establish the connection.
+         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+         Connection con = DriverManager.getConnection(connectionUrl);
+
+         // Create a test table.
+         Statement stmt = con.createStatement();
+         try {
+            stmt.executeUpdate("DROP TABLE XAMin"); 
+         }
+         catch (Exception e) {
+         }
+         stmt.executeUpdate("CREATE TABLE XAMin (f1 int, f2 varchar(max))");
+         stmt.close();
+         con.close();
+
+         // Create the XA data source and XA ready connection.
+         SQLServerXADataSource ds = new SQLServerXADataSource();
+         ds.setUser(user);
+         ds.setPassword(password);
+         ds.setServerName(serverName);
+         ds.setPortNumber(portNumber);
+         ds.setDatabaseName(databaseName);
+         XAConnection xaCon = ds.getXAConnection();
+         con = xaCon.getConnection();
+
+         // Get a unique Xid object for testing.
+         XAResource xaRes = null;
+         Xid xid = null;
+         xid = XidImpl.getUniqueXid(1);
+
+         // Get the XAResource object and set the timeout value.
+         xaRes = xaCon.getXAResource();
+         xaRes.setTransactionTimeout(0);
+
+         // Perform the XA transaction.
+         System.out.println("Write -&gt; xid = " + xid.toString());
+         xaRes.start(xid,XAResource.TMNOFLAGS);
+         PreparedStatement pstmt = 
+         con.prepareStatement("INSERT INTO XAMin (f1,f2) VALUES (?, ?)");
+         pstmt.setInt(1,1);
+         pstmt.setString(2,xid.toString());
+         pstmt.executeUpdate();
+
+         // Commit the transaction.
+         xaRes.end(xid,XAResource.TMSUCCESS);
+         xaRes.commit(xid,true);
+
+         // Cleanup.
+         con.close();
+         xaCon.close();
+
+         // Open a new connection and read back the record to verify that it worked.
+         con = DriverManager.getConnection(connectionUrl);
+         ResultSet rs = con.createStatement().executeQuery("SELECT * FROM XAMin");
+         rs.next();
+         System.out.println("Read -&gt; xid = " + rs.getString(2));
+         rs.close();
+         con.close();
+      } 
+
+      // Handle any errors that may have occurred.
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}
+
+
+class XidImpl implements Xid {
+
+   public int formatId;
+   public byte[] gtrid;
+   public byte[] bqual;
+   public byte[] getGlobalTransactionId() {return gtrid;}
+   public byte[] getBranchQualifier() {return bqual;}
+   public int getFormatId() {return formatId;}
+
+   XidImpl(int formatId, byte[] gtrid, byte[] bqual) {
+      this.formatId = formatId;
+      this.gtrid = gtrid;
+      this.bqual = bqual;
+   }
+
+   public String toString() {
+      int hexVal;
+      StringBuffer sb = new StringBuffer(512);
+      sb.append("formatId=" + formatId);
+      sb.append(" gtrid(" + gtrid.length + ")={0x");
+      for (int i=0; i&lt;gtrid.length; i++) {
+         hexVal = gtrid[i]&amp;0xFF;
+         if ( hexVal &lt; 0x10 )
+            sb.append("0" + Integer.toHexString(gtrid[i]&amp;0xFF));
+         else
+            sb.append(Integer.toHexString(gtrid[i]&amp;0xFF));
+         }
+         sb.append("} bqual(" + bqual.length + ")={0x");
+         for (int i=0; i&lt;bqual.length; i++) {
+            hexVal = bqual[i]&amp;0xFF;
+            if ( hexVal &lt; 0x10 )
+               sb.append("0" + Integer.toHexString(bqual[i]&amp;0xFF));
+            else
+               sb.append(Integer.toHexString(bqual[i]&amp;0xFF));
+         }
+         sb.append("}");
+         return sb.toString();
+      }
+
+      // Returns a globally unique transaction id.
+      static byte [] localIP = null;
+      static int txnUniqueID = 0;
+      static Xid getUniqueXid(int tid) {
+
+      Random rnd = new Random(System.currentTimeMillis());
+      txnUniqueID++;
+      int txnUID = txnUniqueID;
+      int tidID = tid;
+      int randID = rnd.nextInt();
+      byte[] gtrid = new byte[64];
+      byte[] bqual = new byte[64];
+      if ( null == localIP) {
+         try {
+            localIP = Inet4Address.getLocalHost().getAddress();
+         }
+         catch ( Exception ex ) {
+            localIP =  new byte[] { 0x01,0x02,0x03,0x04 };
+         }
+      }
+      System.arraycopy(localIP,0,gtrid,0,4);
+      System.arraycopy(localIP,0,bqual,0,4);
+
+      // Bytes 4 -&gt; 7 - unique transaction id.
+      // Bytes 8 -&gt;11 - thread id.
+      // Bytes 12-&gt;15 - random number generated by using seed from current time in milliseconds.
+      for (int i=0; i&lt;=3; i++) {
+         gtrid[i+4] = (byte)(txnUID%0x100);
+         bqual[i+4] = (byte)(txnUID%0x100);
+         txnUID &gt;&gt;= 8;
+         gtrid[i+8] = (byte)(tidID%0x100);
+         bqual[i+8] = (byte)(tidID%0x100);
+         tidID &gt;&gt;= 8;
+         gtrid[i+12] = (byte)(randID%0x100);
+         bqual[i+12] = (byte)(randID%0x100);
+         randID &gt;&gt;= 8;
+      }
+      return new XidImpl(0x1234, gtrid, bqual);
+   }
+}</pre></span></div></div><span id="seeAlsoSpan"><h1 class="heading">Voir aussi</h1></span><div id="seeAlsoSection" class="section" name="collapseableSection" style=""><div class="seeAlsoStyle"><span sdata="link"><a href="afbb776f-05dc-4e79-bb25-2c340483e401.htm">Exécution de transactions avec le pilote JDBC</a></span></div></div></div><div id="footer" class="section"><span id="feedbackarea">Envoyez vos <a href="javascript:SubmitFeedback('DevDocs@Microsoft.com','','','','8.0.12060.10000','%0\dMerci pour vos commentaires qui permettent aux équipes chargées de rédiger la documentation développeur d\'en améliorer la qualité. Pendant la révision de vos commentaires, il est possible que nous vous contactions par courrier électronique afin de vous demander des éclaircissements ou d\'autres commentaires sur la solution envisagée. Nous n\'utilisons pas votre adresse de messagerie dans un autre but et nous la supprimons une fois notre révision terminée.%0\APour plus d\'informations sur les politiques de confidentialité de Microsoft, consultez http://privacy.microsoft.com/fr-fr/default.aspx.%0\A%0\d','Commentaires client.');">commentaires</a> sur cette rubrique à Microsoft.</span><span id="copyrightarea"><p><a href="9bad553b-9e70-4696-8499-2e35f772a1e0.htm">© 2012 Microsoft. Tous droits réservés.</a></p></span></div></div></body></html>

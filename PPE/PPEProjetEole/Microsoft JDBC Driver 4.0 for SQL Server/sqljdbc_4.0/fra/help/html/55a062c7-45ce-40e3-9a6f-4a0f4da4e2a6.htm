@@ -1,0 +1,32 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><META NAME="save" CONTENT="history" /><title>Utilisation de clés générées automatiquement</title><meta name="Language" content="fr-fr" /><meta name="System.Keywords" content="clés générées automatiquement" /><meta name="Microsoft.Help.Id" content="55a062c7-45ce-40e3-9a6f-4a0f4da4e2a6" /><meta name="Description" content="Le Pilote JDBC Microsoft pour SQL Server prend en charge les API JDBC 3.0 facultatives afin de récupérer automatiquement les identificateurs de lignes générés." /><meta name="Microsoft.Help.ContentType" content="Concepts" /><link rel="stylesheet" type="text/css" href="../local/Classic.css" /><script type="text/javascript" src="../scripts/EventUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/SplitScreen.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/Dropdown.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_manifold.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_feedBack.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CheckboxMenu.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CommonUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../local/script_main.js">&amp;nbsp;</script></head><body><div id="header"><table id="bottomTable" cellpadding="0" cellspacing="0"><tr><td align="left"><span id="headerBold">Utilisation de clés générées automatiquement</span></td></tr></table><table id="gradientTable"><tr><td class="nsrBottom" background="../icons/gradient.gif" /></tr></table></div><div id="mainSection"><div id="mainBody"><div class="introduction"><p>Le Pilote JDBC Microsoft pour SQL Server prend en charge les API JDBC 3.0 facultatives afin de récupérer automatiquement les identificateurs de lignes générés. La principale utilité de cette fonctionnalité consiste à offrir un moyen de rendre des valeurs IDENTITY disponibles pour une application mettant à jour une table de base de données, sans nécessiter de requête ni de seconde boucle avec le serveur. </p><p>Comme SQL Server ne prend pas en charge les pseudo-colonnes pour les identificateurs, les mises à jour devant utiliser une fonctionnalité de clé générée automatiquement doivent fonctionner par rapport à une table contenant une colonne IDENTITY. SQL Server ne permet l'utilisation que d'une seule colonne IDENTITY par table. Le jeu de résultats retourné par la méthode <a href="a3325950-0e81-4ae8-aa0c-e1f6d371adcd.htm">getGeneratedKeys</a> de la classe <a href="ec24963c-8b51-4838-91e9-1fbfa2347451.htm">SQLServerStatement</a> ne comprend qu'une seule colonne dont le nom retourné est GENERATED_KEYS. Si des clés générées sont demandées pour une table ne contenant pas de colonne IDENTITY, le pilote JDBC retourne un jeu de résultats de valeur « null ».</p><p>Par exemple, créez la table suivante dans l'exemple de base de données SQL Server 2005 AdventureWorks :</p><div class="sampleCode"><span codeLanguage="other"><pre>CREATE TABLE TestTable 
+   (Col1 int IDENTITY, 
+    Col2 varchar(50), 
+    Col3 int);</pre></span></div><p>Dans l'exemple suivant, une connexion ouverte à l'exemple de base de données AdventureWorks est transmise à la fonction. Une instruction SQL est générée pour ajouter des données à la table, puis l'instruction est exécutée et la valeur de colonne IDENTITY s'affiche.</p><div name="snippetGroup"><div class="sampleCode"><span codeLanguage="Java"><pre>public static void executeInsertWithKeys(Connection con) {
+   try {
+      String SQL = "INSERT INTO TestTable (Col2, Col3) VALUES ('S', 50)";
+      Statement stmt = con.createStatement();
+      int count = stmt.executeUpdate(SQL, Statement.RETURN_GENERATED_KEYS);
+      ResultSet rs = stmt.getGeneratedKeys();
+
+      ResultSetMetaData rsmd = rs.getMetaData();
+      int columnCount = rsmd.getColumnCount();
+      if (rs.next()) {
+         do {
+            for (int i=1; i&lt;=columnCount; i++) {
+               String key = rs.getString(i);
+               System.out.println("KEY " + i + " = " + key);
+            }
+         } while(rs.next());
+      }
+      else {
+         System.out.println("NO KEYS WERE GENERATED.");
+      }
+      rs.close();
+      stmt.close();
+   }
+   catch (Exception e) {
+      e.printStackTrace();
+   }
+}
+
+</pre></span></div></div></div><span id="seeAlsoSpan"><h1 class="heading">Voir aussi</h1></span><div id="seeAlsoSection" class="section" name="collapseableSection" style=""><div class="seeAlsoStyle"><span sdata="link"><a href="7f8f3e8f-841e-4449-9154-b5366870121f.htm">Utilisation d'instructions avec le pilote JDBC</a></span></div></div></div><div id="footer" class="section"><span id="feedbackarea">Envoyez vos <a href="javascript:SubmitFeedback('DevDocs@Microsoft.com','','','','8.0.12060.10000','%0\dMerci pour vos commentaires qui permettent aux équipes chargées de rédiger la documentation développeur d\'en améliorer la qualité. Pendant la révision de vos commentaires, il est possible que nous vous contactions par courrier électronique afin de vous demander des éclaircissements ou d\'autres commentaires sur la solution envisagée. Nous n\'utilisons pas votre adresse de messagerie dans un autre but et nous la supprimons une fois notre révision terminée.%0\APour plus d\'informations sur les politiques de confidentialité de Microsoft, consultez http://privacy.microsoft.com/fr-fr/default.aspx.%0\A%0\d','Commentaires client.');">commentaires</a> sur cette rubrique à Microsoft.</span><span id="copyrightarea"><p><a href="9bad553b-9e70-4696-8499-2e35f772a1e0.htm">© 2012 Microsoft. Tous droits réservés.</a></p></span></div></div></body></html>

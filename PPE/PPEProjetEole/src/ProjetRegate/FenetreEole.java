@@ -17,12 +17,24 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JList;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class FenetreEole extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField tfNomRegate;
 	private JTextField tfDistRegate;
+	private JTable tblClass1;
+	private JTable tblClass2;
+	private JTable tblClass3;
+	private JTable tblClass4;
+	private JTable tblClasse1;
+	private JTable tblClasse2;
+	private JTable tblClasse3;
+	private JTable tblClasse4;
 
 	/**
 	 * Launch the application.
@@ -142,7 +154,158 @@ public class FenetreEole extends JFrame {
 		lblDate.setBounds(161, 59, 46, 14);
 		layeredPane.add(lblDate);
 		
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Classement", null, tabbedPane_1, null);
+		JTabbedPane tabbedCla = new JTabbedPane(JTabbedPane.TOP);
+		tabbedCla.setBounds(10, 11, 1030, 553);
+		contentPane.add(tabbedCla);
+		
+		
+		
+		JLayeredPane layeredPaneCl = new JLayeredPane();
+		layeredPaneCl.setToolTipText("R\u00E9gate");
+		tabbedPane.addTab("Classement", null, layeredPaneCl, null);
+		layeredPaneCl.setLayout(null);
+		
+		JLabel lblClassement = new JLabel("Classement");
+		lblClassement.setFont(new Font("Tahoma", Font.BOLD, 22));
+		lblClassement.setBounds(410, 21, 168, 47);
+		layeredPaneCl.add(lblClassement);
+		
+		JComboBox cmbRegates = new JComboBox();
+		cmbRegates.setModel(new DefaultComboBoxModel(new String[] {"R\u00E9gates"}));
+		cmbRegates.setToolTipText("");
+		cmbRegates.setBounds(66, 36, 138, 27);
+		layeredPaneCl.add(cmbRegates);
+		
+		tblClass1 = new JTable();
+		tblClass1.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Classe 1"},
+			},
+			new String[] {
+				"classe1"
+			}
+		));
+		tblClass1.setBounds(33, 98, 214, 16);
+		layeredPaneCl.add(tblClass1);
+		
+		tblClass2 = new JTable();
+		tblClass2.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Classe 2"},
+			},
+			new String[] {
+				"classe2"
+			}
+		));
+		tblClass2.setBounds(298, 98, 214, 16);
+		layeredPaneCl.add(tblClass2);
+		
+		tblClass3 = new JTable();
+		tblClass3.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Classe 3"},
+			},
+			new String[] {
+				"classe3"
+			}
+		));
+		tblClass3.setBounds(559, 98, 214, 16);
+		layeredPaneCl.add(tblClass3);
+		
+		tblClass4 = new JTable();
+		tblClass4.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Classe 4"},
+			},
+			new String[] {
+				"classe4"
+			}
+		));
+		tblClass4.setBounds(796, 98, 214, 16);
+		layeredPaneCl.add(tblClass4);
+		
+		tblClasse1 = new JTable();
+		tblClasse1.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"classe1Voil", "classe1Temps"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tblClasse1.setBounds(33, 113, 214, 390);
+		layeredPaneCl.add(tblClasse1);
+		
+		tblClasse2 = new JTable();
+		tblClasse2.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"classe2Voil", "classe2Temps"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tblClasse2.setBounds(298, 113, 214, 390);
+		layeredPaneCl.add(tblClasse2);
+		
+		tblClasse3 = new JTable();
+		tblClasse3.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"classe3Voil", "classe3Temps"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tblClasse3.setBounds(559, 113, 214, 390);
+		layeredPaneCl.add(tblClasse3);
+		
+		tblClasse4 = new JTable();
+		tblClasse4.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"classe4Voil", "classe4Temps"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tblClasse4.setBounds(796, 113, 214, 390);
+		layeredPaneCl.add(tblClasse4);
+		
+		JButton btnEnr = new JButton("Enregistrer");
+		btnEnr.setBounds(688, 34, 110, 30);
+		layeredPaneCl.add(btnEnr);
+		
+		JButton btnAnnu = new JButton("Annuler");
+		btnAnnu.setBounds(823, 34, 116, 30);
+		layeredPaneCl.add(btnAnnu);
 	}
 }
